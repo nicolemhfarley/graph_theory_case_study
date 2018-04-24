@@ -1,37 +1,40 @@
 # Import libraries
-import pandas as import pd
+import pandas as pd
 import networkx as nx
 import numpy as np
+import random
 
 # Load csv file to pandas dataframe: df
-df = pd.read_csv('filter_doctors.csv')
+df = pd.read_csv('filtered_doctors.csv')
 print('Data Loaded')
 
 # Find all unique doctor ids: id_list
 id_list = df['id'].unique()
 
-# Create an empty dictionary and add all procedure codes for each id: code_dict
+# Create an empty dictionary 'code_dict'. Fill with {id: procedure_codes}
 code_dict = dict()
 for i in id_list:
-    test_dict[i] =  df_cleaned[df_cleaned['id'] == i]['procedure_code'].values.tolist()
+    code_dict[i] =  df[df['id'] == i]['procedure_code'].values.tolist()
 
 print('Finding all edges...')
+edge_list = [] # Create an empty list to hold edges: edge_list
+
 # Loop through each id and code values:
-edge_list = []
 for k,v in code_dict.items(): # For each key, value pair
     for k2,v2 in code_dict.items(): # and for all other key, value pairs
         for c in v: # check the first code in v
             for c2 in v2: # and compare it to all the other codes in all other values
                 if c == c2 and k != k2: # if the codes match and its not the same id
                     edge = (k, k2) # create an edge
-                    edge_list.append(edge)
+                    edge_list.append(edge) # add edge to edge_list
 
 # Remove duplicates: edge_set
-edge_set = set(edge_list)
+edge_set = list(set(edge_list))
 print('Edge list created')
 
 # Choose a random sample of 1000 doctors: edge_set_small
-edge_set_small = np.random.choice(edge_set, size=1000)
+random.shuffle(edge_set)
+edge_set_small = edge_set[0:1000]
 
 # Create an empty network: G
 G = nx.Graph()
