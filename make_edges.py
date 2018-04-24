@@ -1,9 +1,10 @@
 # Import libraries
 import pandas as import pd
 import networkx as nx
+import numpy as np
 
 # Load csv file to pandas dataframe: df
-df = pd.read_csv('nicoles csv')
+df = pd.read_csv('filter_doctors.csv')
 print('Data Loaded')
 
 # Find all unique doctor ids: id_list
@@ -14,6 +15,7 @@ code_dict = dict()
 for i in id_list:
     test_dict[i] =  df_cleaned[df_cleaned['id'] == i]['procedure_code'].values.tolist()
 
+print('Finding all edges...')
 # Loop through each id and code values:
 edge_list = []
 for k,v in code_dict.items(): # For each key, value pair
@@ -28,14 +30,18 @@ for k,v in code_dict.items(): # For each key, value pair
 edge_set = set(edge_list)
 print('Edge list created')
 
+# Choose a random sample of 1000 doctors: edge_set_small
+edge_set_small = np.random.choice(edge_set, size=1000)
+
 # Create an empty network: G
 G = nx.Graph()
+print('Graph created')
 
 # Add all edges from edge_set to graph 'G'
-for e in edge_set:
+for e in edge_set_small:
     G.add_edge(*e)
 
 # Save 'G' to .gexf file: 'edge_list.gexf'
-nx.write_gexf(G, 'edge_list.gexf')
-print('File edge_list.gexf created and saved to folder')
+nx.write_gexf(G, 'edge_list_small.gexf')
+print("File 'edge_list_small.gexf' created and saved to directory")
 print('Done')
