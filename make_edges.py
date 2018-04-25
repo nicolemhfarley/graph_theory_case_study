@@ -1,6 +1,7 @@
 # Import libraries
 import pandas as pd
 import networkx as nx
+from networkx.algorithms import community
 import numpy as np
 import random
 
@@ -46,5 +47,7 @@ for e in edge_set_small:
 
 # Save 'G' to .gexf file: 'edge_list.gexf'
 nx.write_gexf(G, 'edge_list_small.gexf')
+community_graph = community.girvan_newman(G)
+nx.write_gexf(community_graph, 'community_graphs.gexf')
 print("File 'edge_list_small.gexf' created and saved to directory")
 print('Done')
